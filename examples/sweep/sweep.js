@@ -17,15 +17,15 @@ let strengthL = 1;
 let panStep = 1 / numSamples
 
 // Generate samples for an ever-changing frequency.
-let sampR = new Float32Array(numSamples)
 let sampL = new Float32Array(numSamples)
+let sampR = new Float32Array(numSamples)
 let curInterval = startInterval
 let curAngle = 0
 for (let i = 0; i < numSamples; i++) {
 	curSample = Math.sin(curAngle)
 	
-	sampR[i] = curSample * strengthR
-	sampL[i] = curSample * strengthL
+	sampL[i] = curSample * Math.pow(strengthL, 2)
+	sampR[i] = curSample * Math.pow(strengthR, 2)
 	
 	curAngle += curInterval
 	curInterval += intervalStep
@@ -35,5 +35,5 @@ for (let i = 0; i < numSamples; i++) {
 
 // Generate the WAV.
 let sweep = new WAV(sampleRate, 2)
-sweep.addSamples([sampR, sampL])
+sweep.addSamples([sampL, sampR])
 sweep.download('sweep.wav')
