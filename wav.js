@@ -1,4 +1,4 @@
-// WAV generation & playback library.
+// WAV file generation, download & playback library.
 
 'use strict'
 
@@ -17,31 +17,31 @@ function WAV(sampleRate, numChannels) {
 	// Constructor Helpers
 	//-------------------------------------------------------------------------
 
+	// Class to manage byte arrays for WAV data.
 	function _Uint8Vector(initalLength) {
 		let _data = new Uint8Array(initalLength)
 		let _size = 0
 
 		// Resizes the internal UInt8Array by creating a new one and copying
 		// elements from the old.
-		function _resizeArray(newSize) {
+		let _resizeArray = (newSize) => {
 			// Sanity check.
 			if (newSize === _data.length) {
 				return
 			}
 
 			// Copy all elements into the new array.
-			newArr = new Uint8Array(newSize)
-			dataStop = newSize > _data.length ? _data.length : newSize 
+			let newArr = new Uint8Array(newSize)
+			let dataStop = newSize > _data.length ? _data.length : newSize 
 			for (let i = 0; i < dataStop; i++) {
 				newArr[i] = _data[i]
 			}
 
 			_data = newArr
-			_size = newSize
 		}
 
 		// Returns the next power of 2 greater than the given integer.
-		function _nextPowerOf2(n) {
+		let _nextPowerOf2 = (n) => {
 			let count = 0
 			while (n !== 0) {
 				n >>= 1
@@ -51,20 +51,28 @@ function WAV(sampleRate, numChannels) {
 		}
 
 		return ({
-			getBuffer: function() {
-				console.log(_data)
+			writeBuffer: () => {
+				return _data.slice(0, _size)
 			},
 
 			// Append data to the vector. Integers are stored as with little
 			// endianess.
-			appendData: function(data, numBytes) {
+			appendData: (data, numBytes) => {
 				// Resize the array to hold the new data if necessary.
 				if (! numBytes) {
 					numBytes = data.length
 				}
 
+				// DEBUG:
+				console.log(`_size: ${_size}`)
+				console.log(`numBytes: ${numBytes}`)
+				console.log(`_data.length: ${_data.length}`)
+
 				if (_size + numBytes > _data.length) {
 					_resizeArray(_nextPowerOf2(_data.length))
+
+					// DEBUG:
+					console.log(`Resized array to ${_data.length} bytes`)
 				}
 
 				// Add the data to the end.
@@ -84,7 +92,7 @@ function WAV(sampleRate, numChannels) {
 
 			// Insert data at a particular index in the vector. Integers are
 			// stored with little endianess.
-			insertData: function(index, data, numBytes) {
+			insertData: (index, data, numBytes) => {
 				if (! numBytes) {
 					numBytes = data.length
 				}
@@ -134,29 +142,25 @@ function WAV(sampleRate, numChannels) {
 	}
 	let _numChannels = numChannels
 
-	// Write WAV header information.
-	let wavHeader = new _Uint8Vector(44)
-	wavHeader.appendData('RIFF')             // Chunk ID.
-	wavHeader.appendData(28, 4)              // Chunk size.
-	wavHeader.appendData('WAVE')             // Format.
-	wavHeader.appendData('fmt ')             // Sub chunk 1 ID. 
-	wavHeader.appendData(16, 4)              // Sub chunk 1 size. (16 for PCM)
-	wavHeader.appendData(1, 2)               // Audio format. (1 = PCM)
-	wavHeader.appendData(numChannels, 2)     // Number of channels.
-	wavHeader.appendData(sampleRate, 4)      // Sample rate.
-	wavHeader.appendData(sampleRate * numChannels * 2, 4) // Byte rate.
-	wavHeader.appendData(numChannels * 2, 2) // Block align.
-	wavHeader.appendData(16, 2)              // Bits per sample.
-	wavHeader.appendData('data')             // Sub chunk 2 ID.
-	wavHeader.appendData(0, 4)               // Sub chunk 2 size.
-	
-	wavHeader.getBuffer()
+	// Assign defaults. Maybe we'll make these dynamic later.
+	let _bpc = 2
 
-	// Set up a sample array for each channel.
-	let _samples = []
-	for (let i = 0; i < this.numChannels; i++) {
-		_samples[i] = new Uint16Array()
-	}
+	// Write WAV header information.
+	let _dataSize = 0
+	let _data = new _Uint8Vector(44)
+	_data.appendData('RIFF')             // Chunk ID.
+	_data.appendData(28, 4)              // Chunk size. (Filesize - 8)
+	_data.appendData('WAVE')             // Format.
+	_data.appendData('fmt ')             // Sub chunk 1 ID. 
+	_data.appendData(16, 4)              // Sub chunk 1 size. (16 = PCM)
+	_data.appendData(1, 2)               // Audio format. (1 = PCM)
+	_data.appendData(_numChannels, 2)    // Number of channels.
+	_data.appendData(_sampleRate, 4)     // Sample rate.
+	_data.appendData(_sampleRate * _numChannels * _bpc, 4) // Byte rate.
+	_data.appendData(_numChannels * _bpc, 2)               // Block align.
+	_data.appendData(_bpc, 2)            // Bits per sample.
+	_data.appendData('data')             // Sub chunk 2 ID.
+	_data.appendData(0, 4)               // Sub chunk 2 size.
 
 	//-------------------------------------------------------------------------
 	// Member Function Definitions
@@ -164,18 +168,77 @@ function WAV(sampleRate, numChannels) {
 
 	return ({
 		// Get the sample rate for this WAV object.
-		getSampleRate: function() {
+		getSampleRate: () => {
 			return _sampleRate
 		},
 
 		// Get the channel count for this WAV object.
-		getChannelCount: function() {
+		getChannelCount: () => {
 			return _numChannels
 		},
 
-		// 
-		addSamples: function() {
+		// Adds samples to the WAV.
+		addSamples: (samples) => {
+			// Ensure samples are in as many arrays as there are channels.
+			if (! Array.isArray(samples)) {
+				throw new Error('invalid data format')
+			} else if (_numChannels !== samples.length) {
+				throw new Error('invalid data format')
+			}
+			
+			// Ensure each channel is its own sample array.
+			for (let i = 0; i < _numChannels; i++) {
+				if (! Array.isArray(samples[i])) {
+					throw new Error('invalid data format')
+				}
+			}
 
+			// Ensure stereo samples are the same length.
+			if (_numChannels === 2 && samples[0].length !== samples[1].length) {
+				throw new Error('invalid data format')
+			}
+
+			// Add samples one by one.
+			if (_numChannels == 1) {
+				for (let i = 0; i < samples[0].length; i++) {
+					let samp = Math.round(samples[0][i] * 32767)
+					_data.appendData(samp, _bpc)
+				}
+			} else {
+				for (let i = 0; i < samples[0].length; i++) {
+					let samp1 = Math.round(samples[0][i] * 32767)
+					let samp2 = Math.round(samples[1][i] * 32767)
+					_data.appendData(samp1, _bpc)
+					_data.appendData(samp2, _bpc)
+				}
+			}
+			_dataSize += _numChannels * _bpc * samples[0].length
+		},
+
+		download: (filename) => {
+			// Create a downloadable blob & object URL.
+			let blob = new Blob([_data.writeBuffer()], {
+				type: 'application/octet-stream'
+			})
+			let url = window.URL.createObjectURL(blob)
+
+			// Download the blob.
+			let a = document.createElement('a')
+			a.href = url
+			a.download = filename
+			document.body.appendChild(a)
+			a.style = 'display: none'
+			a.click()
+			a.remove()
+
+			// Destory the object URL.
+			setTimeout(() => {
+				return window.URL.revokeObjectURL(url)
+			}, 1000)
+		},
+
+		writeBuffer: () => {
+			return _data.writeBuffer()
 		}
 	})
 }
