@@ -58,21 +58,13 @@ function WAV(sampleRate, numChannels) {
 			// Append data to the vector. Integers are stored as with little
 			// endianess.
 			appendData: (data, numBytes) => {
-				// Resize the array to hold the new data if necessary.
 				if (! numBytes) {
 					numBytes = data.length
 				}
 
-				// DEBUG:
-				console.log(`_size: ${_size}`)
-				console.log(`numBytes: ${numBytes}`)
-				console.log(`_data.length: ${_data.length}`)
-
+				// Resize the array to hold the new data if necessary.
 				if (_size + numBytes > _data.length) {
 					_resizeArray(_nextPowerOf2(_data.length))
-
-					// DEBUG:
-					console.log(`Resized array to ${_data.length} bytes`)
 				}
 
 				// Add the data to the end.
@@ -148,19 +140,19 @@ function WAV(sampleRate, numChannels) {
 	// Write WAV header information.
 	let _dataSize = 0
 	let _data = new _Uint8Vector(44)
-	_data.appendData('RIFF')             // Chunk ID.
-	_data.appendData(28, 4)              // Chunk size. (Filesize - 8)
-	_data.appendData('WAVE')             // Format.
-	_data.appendData('fmt ')             // Sub chunk 1 ID. 
-	_data.appendData(16, 4)              // Sub chunk 1 size. (16 = PCM)
-	_data.appendData(1, 2)               // Audio format. (1 = PCM)
-	_data.appendData(_numChannels, 2)    // Number of channels.
-	_data.appendData(_sampleRate, 4)     // Sample rate.
+	_data.appendData('RIFF')          // Chunk ID.
+	_data.appendData(0, 4)            // Chunk size. (Filesize - 8)
+	_data.appendData('WAVE')          // Format.
+	_data.appendData('fmt ')          // Sub chunk 1 ID. 
+	_data.appendData(16, 4)           // Sub chunk 1 size. (16 = PCM)
+	_data.appendData(1, 2)            // Audio format. (1 = PCM)
+	_data.appendData(_numChannels, 2) // Number of channels.
+	_data.appendData(_sampleRate, 4)  // Sample rate.
 	_data.appendData(_sampleRate * _numChannels * _bpc, 4) // Byte rate.
 	_data.appendData(_numChannels * _bpc, 2)               // Block align.
-	_data.appendData(_bpc, 2)            // Bits per sample.
-	_data.appendData('data')             // Sub chunk 2 ID.
-	_data.appendData(0, 4)               // Sub chunk 2 size.
+	_data.appendData(_bpc * 8, 2)     // Bits per sample.
+	_data.appendData('data')          // Sub chunk 2 ID.
+	_data.appendData(0, 4)            // Sub chunk 2 size.
 
 	//-------------------------------------------------------------------------
 	// Member Function Definitions
@@ -238,6 +230,10 @@ function WAV(sampleRate, numChannels) {
 		},
 
 		writeBuffer: () => {
+			// Update the file size.
+			_data.insertData(4, 36 + _dataSize, 4)
+			_data.insertData(40, _dataSize, 4)
+
 			return _data.writeBuffer()
 		}
 	})
