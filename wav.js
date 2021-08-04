@@ -169,10 +169,15 @@ function WAV(sampleRate, numChannels) {
 			return _numChannels
 		},
 
-		// Adds samples to the WAV.
+		/**
+		 * Appends audio samples to the WAV file.
+		 * 
+		 * @member
+		 * @param {Float32Array} samples 
+		 */
 		addSamples: (samples) => {
 			// Ensure samples are in as many arrays as there are channels.
-			if (! samples.constructor === Float32Array) {
+			if (! Array.isArray(samples)) {
 				throw new Error('invalid data format')
 			} else if (samples.length !== _numChannels) {
 				throw new Error('invalid data format')
@@ -208,6 +213,10 @@ function WAV(sampleRate, numChannels) {
 		},
 
 		download: (filename) => {
+			// Update the file size.
+			_data.insertData(4, 36 + _dataSize, 4)
+			_data.insertData(40, _dataSize, 4)
+
 			// Create a downloadable blob & object URL.
 			let blob = new Blob([_data.writeBuffer()], {
 				type: 'application/octet-stream'
