@@ -55,8 +55,7 @@ function WAV(sampleRate, numChannels) {
 				return _data.slice(0, _size)
 			},
 
-			// Append data to the vector. Integers are stored as with little
-			// endianess.
+			// Append data to the vector.
 			appendData: (data, numBytes) => {
 				if (! numBytes) {
 					numBytes = data.length
@@ -69,6 +68,7 @@ function WAV(sampleRate, numChannels) {
 
 				// Add the data to the end.
 				if (Number.isInteger(data)) {
+					// Integers are stored in little endian.
 					for (let i = 0; i < numBytes; i++) {
 						_data[_size + i] = (data >> (i * 8)) & 0xFF
 					}
@@ -82,8 +82,7 @@ function WAV(sampleRate, numChannels) {
 				_size += numBytes
 			},
 
-			// Insert data at a particular index in the vector. Integers are
-			// stored with little endianess.
+			// Insert data at a particular index in the vector.
 			insertData: (index, data, numBytes) => {
 				if (! numBytes) {
 					numBytes = data.length
@@ -96,6 +95,7 @@ function WAV(sampleRate, numChannels) {
 				
 				// Overwrite the data at the given index.
 				if (Number.isInteger(data)) {
+					// Integers are stored in little endian.
 					for (let i = 0; i < numBytes; i++) {
 						_data[index + i] = (data >> (i * 8)) & 0xFF
 					}
@@ -172,15 +172,15 @@ function WAV(sampleRate, numChannels) {
 		// Adds samples to the WAV.
 		addSamples: (samples) => {
 			// Ensure samples are in as many arrays as there are channels.
-			if (! Array.isArray(samples)) {
+			if (! samples.constructor === Float32Array) {
 				throw new Error('invalid data format')
-			} else if (_numChannels !== samples.length) {
+			} else if (samples.length !== _numChannels) {
 				throw new Error('invalid data format')
 			}
 			
 			// Ensure each channel is its own sample array.
 			for (let i = 0; i < _numChannels; i++) {
-				if (! Array.isArray(samples[i])) {
+				if (samples[i].constructor !== Float32Array) {
 					throw new Error('invalid data format')
 				}
 			}
