@@ -23,9 +23,9 @@ function generateSweep(startFreq, endFreq, duration) {
 		// Generate a sample.
 		let curSample = Math.sin(curAngle)
 		
-		// Determine how much of the sample should go to the R & L channels.
-		let volL = Math.pow((1 - pan) / 2, 2)
-		let volR = Math.pow((pan + 1) / 2, 2)
+		// Pan from left to right channel.
+		let volL = (1 - pan) / 2
+		let volR = (pan + 1) / 2
 
 		// Add the panned sample to the arrays.
 		sampL[i] = curSample * volL
@@ -43,5 +43,19 @@ function generateSweep(startFreq, endFreq, duration) {
 	return sweep;
 }
 
-let sweep = generateSweep(1000, 3000, 5)
-sweep.download('sweep.wav')
+// UI setup.
+const startFreqInput = document.getElementById('startFreqInput')
+const endFreqInput = document.getElementById('endFreqInput')
+const durationInput = document.getElementById('durationInput')
+const generateBtn = document.getElementById('generateBtn')
+
+generateBtn.addEventListener('click', () => {
+	// Get current sweep parameters.
+	let startFreq = startFreqInput.value
+	let endFreq = endFreqInput.value
+	let duration = durationInput.value
+
+	// Generate a sweep.
+	let sweep = generateSweep(startFreq, endFreq, duration)
+	sweep.download('sweep.wav')
+})

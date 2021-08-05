@@ -12,25 +12,38 @@
 </head>
 
 <body>
-	<h1>Frequency Sweep Generator</h1>
-	<h3>Generate a rising or falling tone between two endpoint frequencies.</h3>
-
-	<div class="input-field">
-		<label for="startFreqInput">Start Frequency (Hz)</label>
-		<input type="text" id="startFreqInput">
+	<!-- Header -->
+	<div class="section">
+		<h1>Frequency Sweep Generator</h1>
+		<h2>Generate a rising or falling tone between two endpoint frequencies.</h2>
 	</div>
 
-	<div class="input-field">
-		<label for="endFreqInput">End Frequency (Hz)</label>
-		<input type="text" id="endFreqInput">
-	</div>
+	<!-- Parameters -->
+	<div class="section">
+		<div class="input-field">
+			<label for="startFreqInput">Start Frequency (Hz)</label>
+			<input type="text" id="startFreqInput">
+		</div>
 	
-	<div class="input-field">
-		<label for="durationInput">Sweep Time (Seconds)</label>
-		<input type="text" id="durationInput">
+		<div class="input-field">
+			<label for="endFreqInput">End Frequency (Hz)</label>
+			<input type="text" id="endFreqInput">
+		</div>
+		
+		<div class="input-field">
+			<label for="durationInput">Sweep Time (Seconds)</label>
+			<input type="text" id="durationInput">
+		</div>
+
+		<hr>
+
+		<button id="generateBtn">Generate</button>
 	</div>
-	
-	<button id="generateBtn">Generate</button>
+
+	<!-- Output -->
+	<div class="section hidden">
+
+	</div>
 
 	<script src="../../wav.js"></script>
 	<script src="sweep.js"></script>

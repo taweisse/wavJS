@@ -227,8 +227,8 @@ function WAV(sampleRate, numChannels) {
 			let a = document.createElement('a')
 			a.href = url
 			a.download = filename
-			document.body.appendChild(a)
 			a.style = 'display: none'
+			document.body.appendChild(a)
 			a.click()
 			a.remove()
 
