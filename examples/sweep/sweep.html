@@ -6,11 +6,32 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Frequency Sweep | WAV.js Examples</title>
+	<link rel="stylesheet" href="../common/styles.css">
 
+	<title>Frequency Sweep | WAV.js Examples</title>
 </head>
 
 <body>
+	<h1>Frequency Sweep Generator</h1>
+	<h3>Generate a rising or falling tone between two endpoint frequencies.</h3>
+
+	<div class="input-field">
+		<label for="startFreqInput">Start Frequency (Hz)</label>
+		<input type="text" id="startFreqInput">
+	</div>
+
+	<div class="input-field">
+		<label for="endFreqInput">End Frequency (Hz)</label>
+		<input type="text" id="endFreqInput">
+	</div>
+	
+	<div class="input-field">
+		<label for="durationInput">Sweep Time (Seconds)</label>
+		<input type="text" id="durationInput">
+	</div>
+	
+	<button id="generateBtn">Generate</button>
+
 	<script src="../../wav.js"></script>
 	<script src="sweep.js"></script>
 </body>
