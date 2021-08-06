@@ -4,4 +4,4 @@
 
 *Why develop it then?*
 
-Discounting my own stubbornness, many projects do not need all of the features that come with a heavyweight audio library. They simply need to generate and play sound from audio samples. This is exactly what `WAV.js` aims to accomplish, and nothing more. The API is very straightforward and has only a few exposed methods. WAV files are limited by up to 2 16-bit channels at a maximum of 96000 samples per second.
+Discounting my own stubbornness, many projects do not need all of the features that come with a heavyweight audio library. They simply need to generate and play sound from audio samples. This is exactly what `WAV.js` aims to accomplish, and nothing more. The API is very straightforward and has only a few exposed methods. WAV files are limited by up to 2 16-bit channels at a maximum of 96000 samples per second, which is more than acceptable for most applications.
