@@ -136,6 +136,8 @@ function WAV(sampleRate, numChannels) {
 
 	// Assign defaults. Maybe we'll make these dynamic later.
 	let _bpc = 2
+	let _url = null
+	let _audio = null
 
 	// Write WAV header information.
 	let _dataSize = 0
@@ -157,6 +159,27 @@ function WAV(sampleRate, numChannels) {
 	//-------------------------------------------------------------------------
 	// Member Function Definitions
 	//-------------------------------------------------------------------------
+
+	let _generateWAV = () => {
+		// Update the file size.
+		_data.insertData(4, 36 + _dataSize, 4)
+		_data.insertData(40, _dataSize, 4)
+		
+		if (! _url) {
+			let blob = new Blob([_data.writeBuffer()], {
+				type: 'application/octet-stream'
+			})
+			_url = window.URL.createObjectURL(blob)
+			_audio = new Audio(_url)
+		}
+	}
+
+	let _invalidateWAV = () => {
+		if (_url) {
+			window.URL.revokeObjectURL(_url)
+			_audio = null
+		}
+	}
 
 	return ({
 		// Get the sample rate for this WAV object.
@@ -210,40 +233,37 @@ function WAV(sampleRate, numChannels) {
 				}
 			}
 			_dataSize += _numChannels * _bpc * samples[0].length
+			
+			_invalidateWAV()
 		},
 
 		download: (filename) => {
-			// Update the file size.
-			_data.insertData(4, 36 + _dataSize, 4)
-			_data.insertData(40, _dataSize, 4)
-
-			// Create a downloadable blob & object URL.
-			let blob = new Blob([_data.writeBuffer()], {
-				type: 'application/octet-stream'
-			})
-			let url = window.URL.createObjectURL(blob)
-
 			// Download the blob.
+			_generateWAV()
 			let a = document.createElement('a')
-			a.href = url
+			a.href = _url
 			a.download = filename
 			a.style = 'display: none'
 			document.body.appendChild(a)
 			a.click()
 			a.remove()
-
-			// Destory the object URL.
-			setTimeout(() => {
-				return window.URL.revokeObjectURL(url)
-			}, 1000)
 		},
 
-		writeBuffer: () => {
-			// Update the file size.
-			_data.insertData(4, 36 + _dataSize, 4)
-			_data.insertData(40, _dataSize, 4)
+		play: () => {
+			_generateWAV()
+			_audio.play()
+		},
 
-			return _data.writeBuffer()
+		pause: () => {
+			if (_audio) {
+				_audio.pause()
+			}
+		},
+
+		stop: () => {
+			if (_audio) {
+				_audio.stop()
+			}
 		}
 	})
 }

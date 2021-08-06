@@ -3,6 +3,7 @@
 
 'use strict'
 
+// Generates a tone sweep between two frequencies.
 function generateSweep(startFreq, endFreq, duration) {
 	const sampleRate = 44100
 
@@ -48,14 +49,51 @@ const startFreqInput = document.getElementById('startFreqInput')
 const endFreqInput = document.getElementById('endFreqInput')
 const durationInput = document.getElementById('durationInput')
 const generateBtn = document.getElementById('generateBtn')
+const resultSection = document.getElementById('result')
+const playBtn = document.getElementById('playBtn')
+const downloadBtn = document.getElementById('downloadBtn')
+const elapsedTime = document.getElementById('elapsedTime')
+
+let sweep = null
 
 generateBtn.addEventListener('click', () => {
+	// Validate inputs.
+	if (document.querySelector('.invalid')) {
+		return
+	}
+	
+	let start = performance.now()
+
 	// Get current sweep parameters.
 	let startFreq = startFreqInput.value
 	let endFreq = endFreqInput.value
 	let duration = durationInput.value
 
 	// Generate a sweep.
-	let sweep = generateSweep(startFreq, endFreq, duration)
+	sweep = generateSweep(startFreq, endFreq, duration)
+	let end = performance.now()
+
+	// Print the elapsed time.
+	elapsedTime.innerHTML = `Generated WAV in ${Math.round(end - start)} ms`
+	resultSection.classList.remove('hidden')
+})
+
+playBtn.addEventListener('click', () => {
+	sweep.play()
+})
+
+downloadBtn.addEventListener('click', () => {
 	sweep.download('sweep.wav')
 })
+
+// Input validation.
+const inputs = document.querySelectorAll('input')
+setInterval(() => {
+	inputs.forEach((input) => {
+		if (input.value.match(/^[0-9]+$/g)) {
+			input.classList.remove('invalid')
+		} else {
+			input.classList.add('invalid')
+		}
+	})
+}, 100)

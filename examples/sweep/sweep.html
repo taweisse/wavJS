@@ -24,17 +24,17 @@
 			<div class="group">
 				<div class="input-field">
 					<label for="startFreqInput">Start Frequency (Hz)</label>
-					<input type="text" id="startFreqInput">
+					<input type="text" id="startFreqInput" value="100">
 				</div>
 			
 				<div class="input-field">
 					<label for="endFreqInput">End Frequency (Hz)</label>
-					<input type="text" id="endFreqInput">
+					<input type="text" id="endFreqInput" value="1000">
 				</div>
 				
 				<div class="input-field">
 					<label for="durationInput">Sweep Time (Seconds)</label>
-					<input type="text" id="durationInput">
+					<input type="text" id="durationInput" value="3">
 				</div>
 			</div>
 
@@ -42,8 +42,10 @@
 		</div>
 
 		<!-- Output -->
-		<div class="section hidden">
-
+		<div id="result" class="section hidden">
+			<button id="playBtn">Play</button>
+			<button id="downloadBtn">Download</button>
+			<p id="elapsedTime" class="muted align-right"></p>
 		</div>
 	</div>
 

@@ -6,6 +6,17 @@ html {
 	display: none;
 }
 
+.align-right {
+	float: right;
+	position: relative;
+	top: -0.45rem;
+}
+
+.muted {
+	font-size: 0.9rem;
+	color: #313131
+}
+
 body {
 	background-color: #ececec;
 	color: #0c0c0c;
@@ -14,7 +25,7 @@ body {
 .container {
 	padding-top: 20px;
 	max-width: 1000px;
-	min-width: 300px;
+	min-width: 400px;
 	margin: auto;
 }
 
@@ -57,6 +68,26 @@ h2 {
 
 .input-field > input {
 	display: block;
+}
+
+input {
+	outline: none;
+	border: 1px solid black;
+	margin: 1px;
+	position: relative;
+	left: -1px;
+}
+input:active {
+	border: 2px solid black;
+	margin: 0px;
+}
+input:focus {
+	border: 2px solid black;
+	margin: 0px;
+}
+
+input.invalid {
+	border-color: #ff2020;
 }
 
 button {
