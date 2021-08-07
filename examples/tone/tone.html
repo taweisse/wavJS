@@ -6,11 +6,49 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>Tone Generator | WAV.js Examples</title>
+	<link rel="stylesheet" href="../common/styles.css">
 
+	<title>Tone Generator | WAV.js Examples</title>
 </head>
 
-<body>
+<body> 
+	<div class="container">
+		<!-- Header -->
+		<div class="section">
+			<h1>Tone Generator</h1>
+			<h2>Generate and play a sine wave at a particular frequency.</h2>
+		</div>
+
+		<!-- Parameters -->
+		<div class="section">
+			<div class="group">
+				<div class="input-field">
+					<label for="freqInput">Frequency (Hz)</label>
+					<input id="freqInput" type="text" value="1000">
+				</div>
+
+				<div class="input-field">
+					<label for="durationInput">Duration (Seconds)</label>
+					<input id="durationInput" type="text" value="10">
+				</div>
+
+				<div class="input-field">
+					<label for="freqInput">Sample Rate (Samples per second)</label>
+					<input id="freqInput" type="text" value="44100">
+				</div>
+			</div>
+
+			<button id="generateBtn">Generate</button>
+		</div>
+
+		<!-- Output -->
+		<div id="result" class="section hidden">
+			<button id="playBtn" class="play"></button>
+			<button id="stopBtn" class="stop"></button>
+			<p id="elapsedTime" class="muted align-right"></p>
+		</div>
+	</div>
+
 	<script src="../../wav.js"></script>
 </body>
 
