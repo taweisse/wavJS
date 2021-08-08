@@ -104,3 +104,7 @@ button:active {
 	background-color: #0c0c0c;
 	color: #f7f7f7;
 }
+
+button.fixed-width-med {
+	width: 6rem;
+}

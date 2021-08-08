@@ -50,7 +50,7 @@ const endFreqInput = document.getElementById('endFreqInput')
 const durationInput = document.getElementById('durationInput')
 const generateBtn = document.getElementById('generateBtn')
 const resultSection = document.getElementById('result')
-const playBtn = document.getElementById('playBtn')
+const playStopBtn = document.getElementById('playStopBtn')
 const downloadBtn = document.getElementById('downloadBtn')
 const elapsedTime = document.getElementById('elapsedTime')
 
@@ -78,8 +78,17 @@ generateBtn.addEventListener('click', () => {
 	resultSection.classList.remove('hidden')
 })
 
-playBtn.addEventListener('click', () => {
-	sweep.play()
+let isPlaying = false
+playStopBtn.addEventListener('click', () => {
+	if (! isPlaying) {
+		sweep.play()
+		isPlaying = true
+		playStopBtn.innerHTML = 'Stop'
+	} else {
+		sweep.stop()
+		isPlaying = false
+		playStopBtn.innerHTML = 'Play'
+	}
 })
 
 downloadBtn.addEventListener('click', () => {

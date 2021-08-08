@@ -262,7 +262,8 @@ function WAV(sampleRate, numChannels) {
 
 		stop: () => {
 			if (_audio) {
-				_audio.stop()
+				_audio.pause()
+				_audio.currentTime = 0
 			}
 		}
 	})

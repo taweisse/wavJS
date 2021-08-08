@@ -16,12 +16,19 @@
 		<!-- Header -->
 		<div class="section">
 			<h1>Tone Generator</h1>
-			<h2>Generate and play a sine wave at a particular frequency.</h2>
+			<h2>Generate and play a sine wave at a particular sample rate,
+				frequency, duration, and volume. Volume levels above 1.0 will
+				be digitally clipped.</h2>
 		</div>
 
 		<!-- Parameters -->
 		<div class="section">
 			<div class="group">
+				<div class="input-field">
+					<label for="freqInput">Sample Rate (Samples per second)</label>
+					<input id="freqInput" type="text" value="44100">
+				</div>
+
 				<div class="input-field">
 					<label for="freqInput">Frequency (Hz)</label>
 					<input id="freqInput" type="text" value="1000">
@@ -33,8 +40,8 @@
 				</div>
 
 				<div class="input-field">
-					<label for="freqInput">Sample Rate (Samples per second)</label>
-					<input id="freqInput" type="text" value="44100">
+					<label for="volumeInput">Volume Level</label>
+					<input id="volumeInput" type="text" value="1.0">
 				</div>
 			</div>
 
@@ -50,6 +57,7 @@
 	</div>
 
 	<script src="../../wav.js"></script>
+	<script src="./tone.js"></script>
 </body>
 
 </html>
