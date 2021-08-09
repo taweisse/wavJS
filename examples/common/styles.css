@@ -68,26 +68,35 @@ h2 {
 
 .input-field > input {
 	display: block;
-}
-
-input {
+	width: 150px;
 	outline: none;
 	border: 1px solid black;
 	margin: 1px;
 	position: relative;
 	left: -1px;
 }
-input:active {
+.input-field > input:active {
 	border: 2px solid black;
 	margin: 0px;
 }
-input:focus {
+.input-field > input:focus {
 	border: 2px solid black;
 	margin: 0px;
+}
+.input-field > input.invalid {
+	border-color: #ff2020;
 }
 
-input.invalid {
-	border-color: #ff2020;
+/* Input drawing */
+.input-draw {
+	display: block;
+	padding-bottom: 10px;
+}
+.input-draw > canvas {
+	border: 1px solid black;
+	height: 150px;
+	width: 300px;
+	cursor: crosshair;
 }
 
 button {
@@ -107,4 +116,38 @@ button:active {
 
 button.fixed-width-med {
 	width: 6rem;
+}
+
+/* Play, pause & stop buttons */
+button.play {
+	background: transparent;
+	box-sizing: border-box;
+	width: 0;
+	height: 1.5rem;
+	border-color: transparent transparent transparent #1f1f1f;
+	border-style: solid;
+	border-width: 0.75rem 0 0.75rem 1.25rem;
+	padding: 0;
+	margin: 0 5px;
+}
+button.pause {
+	background: transparent;
+	box-sizing: border-box;
+	width: 0;
+	height: 1.5rem;
+	border-color: transparent transparent transparent #1f1f1f;
+	border-style: double;
+	border-width: 0 0 0 1.5rem;
+	padding: 0;
+	margin: 0 5px;
+}
+button.stop {
+	background: transparent;
+	box-sizing: border-box;
+	background-color: #1f1f1f;
+	height: 1.5rem;
+	width: 0;
+	border: solid 0.75rem #1f1f1f;
+	padding: 0;
+	margin: 0 5px;
 }

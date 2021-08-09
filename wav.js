@@ -2,15 +2,6 @@
 
 'use strict'
 
-/**
- * 
- * 
- * @constructor
- * @param {number} sampleRate  Sample rate in samples per second. Integers
- *                              between 1 and 96000 are supported.
- * @param {number} numChannels The number of channels. Must be an integer.
- *                              1 or 2 channels are supported.
- */
 function WAV(sampleRate, numChannels) {
 	
 	//-------------------------------------------------------------------------
@@ -138,6 +129,7 @@ function WAV(sampleRate, numChannels) {
 	let _bpc = 2
 	let _url = null
 	let _audio = null
+	let _audioFinishedCallback = null
 
 	// Write WAV header information.
 	let _dataSize = 0
@@ -160,6 +152,7 @@ function WAV(sampleRate, numChannels) {
 	// Member Function Definitions
 	//-------------------------------------------------------------------------
 
+	// Generates a WAV object URL from the current audio data.
 	let _generateWAV = () => {
 		// Update the file size.
 		_data.insertData(4, 36 + _dataSize, 4)
@@ -174,6 +167,7 @@ function WAV(sampleRate, numChannels) {
 		}
 	}
 
+	// Revokes a previously generated WAV object URL.
 	let _invalidateWAV = () => {
 		if (_url) {
 			window.URL.revokeObjectURL(_url)
@@ -192,12 +186,7 @@ function WAV(sampleRate, numChannels) {
 			return _numChannels
 		},
 
-		/**
-		 * Appends audio samples to the WAV file.
-		 * 
-		 * @member
-		 * @param {Float32Array} samples 
-		 */
+		// Appends audio samples to the WAV file.
 		addSamples: (samples) => {
 			// Ensure samples are in as many arrays as there are channels.
 			if (! Array.isArray(samples)) {
@@ -237,6 +226,7 @@ function WAV(sampleRate, numChannels) {
 			_invalidateWAV()
 		},
 
+		// Launches a browser download prompt for the WAV file.
 		download: (filename) => {
 			// Download the blob.
 			_generateWAV()
@@ -249,17 +239,28 @@ function WAV(sampleRate, numChannels) {
 			a.remove()
 		},
 
-		play: () => {
+		// Plays back the WAV file.
+		play: (finishedCallback) => {
 			_generateWAV()
+			if (_audioFinishedCallback) {
+				_audio.removeEventListener('ended', _audioFinishedCallback)
+			}
+			if (finishedCallback) {
+				_audioFinishedCallback = finishedCallback
+				_audio.addEventListener('ended', _audioFinishedCallback)
+			}
 			_audio.play()
 		},
 
+		// Pauses playback of the WAV file.
 		pause: () => {
 			if (_audio) {
 				_audio.pause()
 			}
 		},
 
+		// Stops playback of the WAV file and returns to the start of the audio
+		// clip.
 		stop: () => {
 			if (_audio) {
 				_audio.pause()

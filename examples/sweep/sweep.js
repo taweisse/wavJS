@@ -55,19 +55,26 @@ const downloadBtn = document.getElementById('downloadBtn')
 const elapsedTime = document.getElementById('elapsedTime')
 
 let sweep = null
+let isPlaying = false
 
+// Generate a new sweep.
 generateBtn.addEventListener('click', () => {
 	// Validate inputs.
 	if (document.querySelector('.invalid')) {
 		return
 	}
+
+	// Stop any existing sweeps.
+	if (isPlaying) {
+		playStopBtn.click()
+	}
 	
 	let start = performance.now()
 
 	// Get current sweep parameters.
-	let startFreq = startFreqInput.value
-	let endFreq = endFreqInput.value
-	let duration = durationInput.value
+	let startFreq = parseInt(startFreqInput.value)
+	let endFreq = parseInt(endFreqInput.value)
+	let duration = parseInt(durationInput.value)
 
 	// Generate a sweep.
 	sweep = generateSweep(startFreq, endFreq, duration)
@@ -78,7 +85,7 @@ generateBtn.addEventListener('click', () => {
 	resultSection.classList.remove('hidden')
 })
 
-let isPlaying = false
+// Play or stop the sweep.
 playStopBtn.addEventListener('click', () => {
 	if (! isPlaying) {
 		sweep.play()
@@ -91,6 +98,7 @@ playStopBtn.addEventListener('click', () => {
 	}
 })
 
+// Download the sweep.
 downloadBtn.addEventListener('click', () => {
 	sweep.download('sweep.wav')
 })

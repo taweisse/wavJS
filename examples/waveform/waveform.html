@@ -12,7 +12,32 @@
 </head>
 
 <body>
+	<div class="container">
+		<!-- Header -->
+		<div class="section">
+			<h1>Custom Waveform Generator</h1>
+			<h2>Draw and play a custom waveform in the box below.</h2>
+		</div>
+
+		<!-- Parameters -->
+		<div class="section">
+			<div class="group">
+				<div class="input-draw">
+					<canvas id=waveformCanvas></canvas>
+				</div>
+
+				<div class="input-field">
+					<label for="freqInput">Frequency (Hz)</label>
+					<input type="text" id="freqInput" value="100">
+				</div>
+			</div>
+
+			<button id="playStopBtn" class="fixed-width-med">Play</button>
+		</div>
+	</div>
+
 	<script src="../../wav.js"></script>
+	<script src="./waveform.js"></script>
 </body>
 
 </html>
