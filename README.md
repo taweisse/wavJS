@@ -4,7 +4,7 @@
 
 *Why develop it then?*
 
-Discounting my own stubbornness, many projects do not need all of the features that come with a heavyweight audio library. Instead, they simply need to generate and play short sounds from audio samples. This is exactly what `WAV.js` aims to accomplish, and nothing more. The API is very straightforward and has only a few exposed methods. WAV files are limited by up to 2 16-bit channels at a maximum of 96000 samples per second, which is more than acceptable for most applications.
+Well, I'm a control freak, and wanted to write it myself. However, many projects do not need all of the features that come with a heavyweight audio library. Instead, they simply need to generate and play short sounds from audio samples. This is exactly what `WAV.js` aims to accomplish, and nothing more. The API is very straightforward and has only a few exposed methods. WAV files are limited by up to 2 16-bit channels at a maximum of 96000 samples per second, which is more than acceptable for most applications.
 
 ## API Spec
 Getting up and running with `WAV.js` is extremely simple:
@@ -22,7 +22,7 @@ Getting up and running with `WAV.js` is extremely simple:
 	wav.addSamples([channelR, channelL])
 	```
 	
-3. Play or download the file. Play, pause, and stop functionality is supported, or a download prompt can be launched. As samples are added to the file, it is automatically regenerated on any call to `play` or `download`.
+3. Play or download the file. Play, pause, and stop functionality is supported, or a download prompt can be launched. The file is regenerated as samples are added, so `play` and `download` always have the most up-to-date version.
 	
 	```
 	wav.play()
