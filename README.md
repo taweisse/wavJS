@@ -29,4 +29,4 @@ Getting up and running with `WAV.js` is extremely simple:
 	wav.download('sound.wav')
 	```
 
-Several [examples](examples/) are provided to show `WAV.js` in action in much greater detail.
+Several [examples](examples/) are provided to document the usage of the library in much greater detail.
