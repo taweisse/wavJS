@@ -160,7 +160,7 @@ function WAV(sampleRate, numChannels) {
 		
 		if (! _url) {
 			let blob = new Blob([_data.writeBuffer()], {
-				type: 'application/octet-stream'
+				type: 'audio/wav'
 			})
 			_url = window.URL.createObjectURL(blob)
 			_audio = new Audio(_url)
